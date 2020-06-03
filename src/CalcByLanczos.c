@@ -229,6 +229,18 @@ int CalcByLanczos(
     fclose(fp);
     TimeKeeper(&(X->Bind), cFileNameTimeKeep, cOutputEigenVecFinish, "a");
   }
+  
+  if(X->Bind.Def.iOutputEigenVec==TRUE){
+      TimeKeeper(&(X->Bind), cFileNameTimeKeep, cOutputEigenVecStart, "a");
+      const char* cFileNameOutputList="%s_list1_%d_rank_%d.dat";
+      sprintf(sdt, cFileNameOutputList, X->Bind.Def.CDataFileHead, X->Bind.Def.k_exct-1, myrank);
+      if(childfopenALL(sdt, "wb", &fp)!=0){
+        exitMPI(-1);
+      }
+      fwrite(list_1, sizeof(long unsigned int),X->Bind.Check.idim_max+1, fp);
+      fclose(fp);
+      TimeKeeper(&(X->Bind), cFileNameTimeKeep, cOutputEigenVecFinish, "a");
+  }
 
   return TRUE;
 }
